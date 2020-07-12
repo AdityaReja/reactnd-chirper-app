@@ -6,11 +6,13 @@ import { TiArrowBackOutline } from 'react-icons/ti'
 import { TiHeartOutline } from 'react-icons/ti'
 import { TiHeartFullOutline } from 'react-icons/ti'
 import {handleToggleTweet} from '../actions/tweets'
+import {Link, withRouter} from 'react-router-dom'
 
 class Tweet extends Component {
 
-    toParent(e, parent) {
-        e.preventDEfault();
+    toParent(e, id) {
+        e.preventDefault();
+        this.props.history.push(`/tweet/${id}`)
     }
 
     handleLike() {
@@ -32,7 +34,7 @@ class Tweet extends Component {
         } = tweet
 
         return (
-            <div className='tweet'>
+            <Link to ={`/tweet/${id}`}className='tweet'>
                 <img
                     src={avatar}
                     alt={`Avatar of ${name}`}
@@ -42,7 +44,7 @@ class Tweet extends Component {
                     <span>{name}</span>
                     <div>{formatDate(timestamp)}</div>
                     {parent &&
-                        <button className='replying-to' onClick={(e) => this.toParent(e, parent)}>
+                        <button className='replying-to' onClick={(e) => this.toParent(e, parent.id)}>
                             Replying to @ {parent.author}
                         </button>
                     }
@@ -59,7 +61,7 @@ class Tweet extends Component {
                         <span>{likes !== 0 && likes}</span>
                     </div>
                 </div>
-            </div>
+            </Link>
         )
     }
 }
@@ -74,4 +76,4 @@ function mapStateToProp({ authUsers, users, tweets }, { id }) {
     }
 }
 
-export default connect(mapStateToProp)(Tweet)
+export default withRouter(connect(mapStateToProp)(Tweet))
